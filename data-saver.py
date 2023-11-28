@@ -11,7 +11,7 @@ romeo_data_header = ["date", "time", "temperature", "electric conductivity", "pH
 golf_datafile = "./data/golf_data.csv"
 golf_data_header = ["date", "time", "co2content", "temperature"]
 
-# check if folder exits
+# Check if folder exits
 if not os.path.exists(f"./{data_foldername}"):
     os.makedirs(data_foldername)
     print(
@@ -28,6 +28,9 @@ golf_data = [
     for row in splitted_rows
     if len(row) > len(romeo_data_header)
 ]
+
+romeo_data.reverse()
+golf_data.reverse()
 
 # Save Data
 with open(romeo_datafile, "w", newline="") as csvfile:
