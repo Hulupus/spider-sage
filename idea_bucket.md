@@ -1,4 +1,9 @@
-# Scraper 
+# Aquaponik Dashboard Scraper 
+
+<!-- V1: Basic Scraper: Return Data to Console      -->
+<!-- V1.2: Save Data in CSV                         -->
+<!-- V1.3: Reverse given Dataset                    -->
+<!-- V2: Merge "date" and "time" column to fix graph-->
 
 Add only new data
 
@@ -8,8 +13,6 @@ def get_new_data(curr_dataset):
 
 print(get_new_data(909))
 
-# Saver
-
 Output when new files are created:
 
-#Check if dataset exists
+Check if dataset exists
