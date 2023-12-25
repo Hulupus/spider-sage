@@ -1,53 +1,46 @@
+# Data Saver
+# Author: Mike van Veen
+# Last Change: 25.12.23
+
 import scraper
 import csv
 import os.path
-from time import localtime, strftime
+
+
+# Define Datasets and Datafolder
+datasets = [
+    ("romeo", ["datetime", "temperature", "electric conductivity", "pH"]),
+    ("golf", ["datetime", "co2content", "temperature"]),
+    ("papa", ["datetime", "co2content", "temperature"]),
+]
 
 data_foldername = "data"
-
-romeo_datafile = "./data/romeo_data.csv"
-romeo_data_header = ["datetime", "temperature", "electric conductivity", "pH"]
-
-golf_datafile = "./data/golf_data.csv"
-golf_data_header = ["datetime", "co2content", "temperature"]
-
-# Check if folder exits
 if not os.path.exists(f"./{data_foldername}"):
     os.makedirs(data_foldername)
-    print(
-        f"[{strftime('%Y-%m-%d %H:%M:%S', localtime())}] Created Directory {data_foldername}"
-    )
+    print(f"[Created Directory {data_foldername}")
+
+# Create Scraper
+s = scraper.Scraper(
+    url="https://schillersigfox.sytes.net:45201/cgi-bin/dashboardROMEO.cgi",
+    outputstream="div",
+    data_element="p",
+)
+
 
 # Prozess
-exising_data = scraper.get_raw_measurements_data()
-splitted_rows = [b.split() for b in exising_data]
-splitted_rows.reverse()
-
-romeo_data = [
-    [f"{row[0]} {row[1]}"] + row[2 : len(romeo_data_header) + 1]
-    for row in splitted_rows
-]
-golf_data = [
-    [f"{row[len(romeo_data_header) + 1]} {row[len(romeo_data_header)+2]}"]
-    + row[1 - len(golf_data_header) :]
-    for row in splitted_rows
-    if len(row) > len(romeo_data_header) + 1
-]
+s.read_raw_measurements_data()
+s.split_datarows_into_cells()
+s.flip_data()
+s.split_data_in_datasets(datasets=datasets)
 
 
 # Save Data
-with open(romeo_datafile, "w", newline="") as csvfile:
-    filewriter = csv.writer(
-        csvfile, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL
-    )
-    filewriter.writerow(romeo_data_header)
-    filewriter.writerows(romeo_data)
-
-with open(golf_datafile, "w", newline="") as csvfile:
-    filewriter = csv.writer(
-        csvfile, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL
-    )
-    filewriter.writerow(golf_data_header)
-    filewriter.writerows(golf_data)
-
-print(f"[{strftime('%Y-%m-%d %H:%M:%S', localtime())}] All measurements saved!")
+data = s.get_data()
+for i, dataset in enumerate(datasets):
+    with open(f"./{data_foldername}/{dataset[0]}_data.csv", "w", newline="") as csvfile:
+        filewriter = csv.writer(
+            csvfile, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL
+        )
+        filewriter.writerow(dataset[1])
+        filewriter.writerows(data[i])
+    print(f"All measurements from {dataset[0]} saved!")
