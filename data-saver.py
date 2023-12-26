@@ -1,6 +1,19 @@
-# Data Saver
-# Author: Mike van Veen
-# Last Change: 25.12.23
+#
+#           data-saver.py
+#
+#           by Mike van Veen
+#
+#           V1: Basic Scraper: Return Data to Console
+#           V1.2: Save Data in CSV
+#           V1.3: Reverse given Dataset
+#
+#           V2: Merge "date" and "time" column to fix graph
+#
+#           V3: Added third dataset to scrape
+#           V3.2: Added dynamic dataset scraper
+#           V3.3 Outsourced code to seperate scraper class
+#           V3.4 Cleanup
+#
 
 import scraper
 import csv
@@ -17,13 +30,13 @@ datasets = [
 data_foldername = "data"
 if not os.path.exists(f"./{data_foldername}"):
     os.makedirs(data_foldername)
-    print(f"[Created Directory {data_foldername}")
+    print(f"Created Directory {data_foldername}")
 
 # Create Scraper
 s = scraper.Scraper(
     url="https://schillersigfox.sytes.net:45201/cgi-bin/dashboardROMEO.cgi",
-    outputstream="div",
-    data_element="p",
+    output_e="div",
+    data_wrapper="p",
 )
 
 
@@ -31,7 +44,7 @@ s = scraper.Scraper(
 s.read_raw_measurements_data()
 s.split_datarows_into_cells()
 s.flip_data()
-s.split_data_in_datasets(datasets=datasets)
+s.split_data_in_datasets(datasets)
 
 
 # Save Data
@@ -43,4 +56,4 @@ for i, dataset in enumerate(datasets):
         )
         filewriter.writerow(dataset[1])
         filewriter.writerows(data[i])
-    print(f"All measurements from {dataset[0]} saved!")
+    print(f"{len(data[i])} measurements from {dataset[0]} saved!")

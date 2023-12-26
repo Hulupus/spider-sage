@@ -1,17 +1,19 @@
-# Data Scraper
-# Author: Mike van Veen
-# Last Change: 25.12.23
+#
+#           scraper.py
+#
+#           by Mike van Veen
+#
 
 from bs4 import BeautifulSoup
 import requests
 
 
 class Scraper:
-    def __init__(self, url, outputstream, data_element) -> None:
+    def __init__(self, url, output_e, data_wrapper) -> None:
         self.data = []
         self.url = url
-        self.outputstream = outputstream
-        self.data_element = data_element
+        self.outputstream = output_e
+        self.data_element = data_wrapper
 
     def read_raw_measurements_data(self):
         page = requests.get(self.url)
@@ -38,18 +40,14 @@ class Scraper:
                     or x[i + biases[j] + 1] - x[i + biases[j]] != len(dataset[1]) + 1
                 ):
                     biases[j] -= 1
-                    continue
-                rows.append(
-                    [f"{row[x[i + biases[j]]]} {row[x[i + biases[j]] + 1]}"]
-                    + row[x[i + biases[j]] + 2 : x[i + biases[j] + 1]]
-                )
+                else:
+                    rows.append(
+                        [f"{row[x[i + biases[j]]]} {row[x[i + biases[j]] + 1]}"]
+                        + row[x[i + biases[j]] + 2 : x[i + biases[j] + 1]]
+                    )
 
             data.append(rows)
         self.data = data
 
     def get_data(self):
         return self.data
-
-
-if __name__ == "__main__":
-    print("Hello")
