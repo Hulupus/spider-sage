@@ -1,7 +1,7 @@
 #
 #           data-saver.py
 #
-#           by Mike van Veen
+#           by Hulupus
 #
 #           V1: Basic Scraper: Return Data to Console
 #           V1.2: Save Data in CSV
@@ -12,7 +12,7 @@
 #           V3: Added third dataset to scrape
 #           V3.2: Added dynamic dataset scraper
 #           V3.3 Outsourced code to seperate scraper class
-#           V3.4 Cleanup
+#           V3.4 Cleanup unnecessary code
 #
 
 import scraper
@@ -34,7 +34,7 @@ if not os.path.exists(f"./{data_foldername}"):
 
 # Create Scraper
 s = scraper.Scraper(
-    url="https://schillersigfox.sytes.net:45201/cgi-bin/dashboardROMEO.cgi",
+    url="my-data-dashboard",
     output_e="div",
     data_wrapper="p",
 )

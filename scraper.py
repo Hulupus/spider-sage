@@ -1,7 +1,7 @@
 #
 #           scraper.py
 #
-#           by Mike van Veen
+#           by Hulupus
 #
 
 from bs4 import BeautifulSoup
